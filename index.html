@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIFA FUT Champions Pricing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #b8bcc8;
+        }
+
+        .section {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            border-radius: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .elite-title {
+            background: linear-gradient(45deg, #9c88ff, #8c7ae6);
+        }
+
+        .champion-title {
+            background: linear-gradient(45deg, #ffd700, #f39c12);
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .price-table th {
+            background: linear-gradient(45deg, #2c3e50, #34495e);
+            padding: 20px 15px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #3498db;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .price-table td {
+            padding: 20px 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            vertical-align: top;
+        }
+
+        .price-table tbody tr {
+            transition: all 0.3s ease;
+        }
+
+        .price-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.01);
+        }
+
+        .rank-cell {
+            font-weight: bold;
+            color: #ffd700;
+            min-width: 120px;
+        }
+
+        .elite-rank {
+            color: #9c88ff;
+        }
+
+        .reward-cell {
+            max-width: 300px;
+            line-height: 1.6;
+        }
+
+        .reward-cell ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .reward-cell li {
+            margin-bottom: 5px;
+            padding: 3px 0;
+            border-left: 3px solid #3498db;
+            padding-left: 10px;
+            margin-left: 5px;
+        }
+
+        .price-cell {
+            font-weight: bold;
+            font-size: 1.1rem;
+            text-align: center;
+        }
+
+        .vnd-price {
+            color: #2ecc71;
+        }
+
+        .usd-price {
+            color: #f39c12;
+        }
+
+        .deal-price {
+            color: #e74c3c;
+            font-style: italic;
+        }
+
+        .currency-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .tab-btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .platform-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .platform-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .platform-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .platform-btn.active {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border-color: #e74c3c;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 50px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer p {
+            color: #b8bcc8;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .price-table {
+                font-size: 12px;
+            }
+
+            .price-table th,
+            .price-table td {
+                padding: 12px 8px;
+            }
+
+            .currency-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .platform-toggle {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Animation for table rows */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .price-table tbody tr {
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        .price-table tbody tr:nth-child(even) {
+            animation-delay: 0.1s;
+        }
+
+        .price-table tbody tr:nth-child(odd) {
+            animation-delay: 0.2s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏆 FIFA FUT Champions Pricing 🏆</h1>
+            <p>Professional FIFA Ultimate Team Champions Boosting Services</p>
+        </div>
+
+        <!-- Currency and Platform Controls -->
+        <div class="currency-tabs">
+            <button class="tab-btn active" onclick="switchCurrency('vnd')">VNĐ Pricing</button>
+            <button class="tab-btn" onclick="switchCurrency('usd')">USD Pricing</button>
+        </div>
+
+        <div class="platform-toggle">
+            <button class="platform-btn active" onclick="switchPlatform('pc')">PC</button>
+            <button class="platform-btn" onclick="switchPlatform('console')">Console (PS/Xbox)</button>
+        </div>
+
+        <!-- Champion Section -->
+        <div class="section">
+            <h2 class="section-title champion-title">Champion Tier</h2>
+            <div class="table-container">
+                <table class="price-table" id="championTable">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Rewards</th>
+                            <th class="price-column">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="championTableBody">
+                        <!-- Champion data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Elite Section -->
+        <div class="section">
+            <h2 class="section-title elite-title">Elite Tier</h2>
+            <div class="table-container">
+                <table class="price-table" id="eliteTable">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Rewards</th>
+                            <th class="price-column">Price</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eliteTableBody">
+                        <!-- Elite data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>&copy; 2025 FIFA FUT Champions Pricing. Professional boosting services available.</p>
+            <p>Contact us for custom pricing and special deals!</p>
+        </div>
+    </div>
+
+    <script>
+        // Data from the CSV attachments
+        const championData = [
+            {
+                rank: "Champion I: 10 points",
+                rewards: [
+                    "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                    "x1 85+ 3x Rare Gold Players Pack",
+                    "x2 81+ TOTW Player Pack",
+                    "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+                    "25,000 Coins"
+                ],
+                vnd: { pc: "400,000", console: "600,000" },
+                usd: { pc: "20$", console: "28$" }
+            },
+            {
+                rank: "Champion II: 9 points",
+                rewards: [
+                    "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                    "x1 85+ 2x Rare Gold Players Pack",
+                    "x1 81+ TOTW Player Pack",
+                    "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+                    "20,000 Coins"
+                ],
+                vnd: { pc: "360,000", console: "550,000" },
+                usd: { pc: "15$", console: "25$" }
+            },
+            {
+                rank: "Champion III: 8 points",
+                rewards: [
+                    "x1 82+ 10x Rare Gold Players Pack (Untradeable)",
+                    "x1 83+ Rare Gold Players Pack",
+                    "x1 85+ 2x Rare Gold Players Pack",
+                    "x1 81+ TOTW Player Pack",
+                    "16,000 Coins"
+                ],
+                vnd: { pc: "320,000", console: "450,000" },
+                usd: { pc: "14$", console: "20$" }
+            },
+            {
+                rank: "Champion IV: 7 points",
+                rewards: [
+                    "x1 82+ Rare Gold Players Pack (Untradeable)",
+                    "x1 84+ 3x Rare Gold Players Pack",
+                    "x1 81+ TOTW Player Pack",
+                    "13,000 Coins"
+                ],
+                vnd: { pc: "250,000", console: "400,000" },
+                usd: { pc: "10$", console: "18$" }
+            },
+            {
+                rank: "Champion V: 6 points",
+                rewards: [
+                    "x1 80+ 10x Rare Gold Players Pack (Untradeable)",
+                    "x1 84+ 3x Rare Gold Players Pack",
+                    "x1 81+ TOTW Player Pack",
+                    "11,000 Coins"
+                ],
+                vnd: { pc: "200,000", console: "350,000" },
+                usd: { pc: "8$", console: "15$" }
+            }
+        ];
+
+        const eliteData = [
+            {
+                rank: "Elite I: 15 Wins",
+                rewards: [
+                    "x1 84+ 10x Rare Gold Players Pack (Untradeable)",
+                    "x1 83+ 10x Rare Gold Players Pack",
+                    "x1 84+ 10x Rare Gold Players Pack",
+                    "x1 88+ 3x Rare Gold Players Pack",
+                    "x1 83+ 3x TOTW Player Pack",
+                    "x2 Cornerstones Guarantee Pack (Untradeable)",
+                    "85,000 Coins"
+                ],
+                vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
+                usd: { pc: "DM to deal", console: "DM to deal" }
+            },
+            {
+                rank: "Elite II: 14 points",
+                rewards: [
+                    "x1 84+ 10x Rare Gold Players Pack (Untradeable)",
+                    "x1 83+ 10x Rare Gold Players Pack",
+                    "x1 84+ 6x Rare Gold Players Pack",
+                    "x1 86+ 3x Rare Gold Players Pack",
+                    "x1 83+ 3x TOTW Player Pack",
+                    "x1 Cornerstones Guarantee Pack (Untradeable)",
+                    "65,000 Coins"
+                ],
+                vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
+                usd: { pc: "DM to deal", console: "DM to deal" }
+            },
+            {
+                rank: "Elite III: 13 points",
+                rewards: [
+                    "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                    "x1 82+ 10x Rare Gold Players Pack",
+                    "x1 84+ 6x Rare Gold Players Pack",
+                    "x1 86+ 3x Rare Gold Players Pack",
+                    "x2 81+ TOTW Player Pack",
+                    "x1 Cornerstones Guarantee Pack (Untradeable)",
+                    "50,000 Coins"
+                ],
+                vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
+                usd: { pc: "DM to deal", console: "DM to deal" }
+            },
+            {
+                rank: "Elite IV: 12 points",
+                rewards: [
+                    "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                    "x1 82+ 10x Rare Gold Players Pack",
+                    "x1 86+ 3x Rare Gold Players Pack",
+                    "x2 81+ TOTW Player Pack",
+                    "x1 Cornerstones Guarantee Pack (Untradeable)",
+                    "40,000 Coins"
+                ],
+                vnd: { pc: "800,000", console: "1,100,000" },
+                usd: { pc: "35$", console: "50$" }
+            },
+            {
+                rank: "Elite V: 11 points",
+                rewards: [
+                    "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                    "x1 82+ 10x Rare Gold Players Pack",
+                    "x1 85+ 3x Rare Gold Players Pack",
+                    "x2 81+ TOTW Player Pack",
+                    "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+                    "30,000 Coins"
+                ],
+                vnd: { pc: "600,000", console: "900,000" },
+                usd: { pc: "30$", console: "40$" }
+            }
+        ];
+
+        let currentCurrency = 'vnd';
+        let currentPlatform = 'pc';
+
+        function formatRewards(rewards) {
+            return rewards.map(reward => `<li>• ${reward}</li>`).join('');
+        }
+
+        function renderTable(data, tableBodyId, isElite = false) {
+            const tbody = document.getElementById(tableBodyId);
+            tbody.innerHTML = '';
+
+            data.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                const price = item[currentCurrency][currentPlatform];
+                const priceClass = currentCurrency === 'vnd' ? 'vnd-price' : 'usd-price';
+                const isDeal = price.includes('Giá thỏa thuận') || price.includes('DM to deal');
+                
+                row.innerHTML = `
+                    <td class="rank-cell ${isElite ? 'elite-rank' : ''}">${item.rank}</td>
+                    <td class="reward-cell">
+                        <ul>${formatRewards(item.rewards)}</ul>
+                    </td>
+                    <td class="price-cell ${isDeal ? 'deal-price' : priceClass}">${price}</td>
+                `;
+                
+                // Add animation delay
+                row.style.animationDelay = `${index * 0.1}s`;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        function switchCurrency(currency) {
+            currentCurrency = currency;
+            
+            // Update active tab
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Re-render tables
+            renderTable(championData, 'championTableBody');
+            renderTable(eliteData, 'eliteTableBody', true);
+        }
+
+        function switchPlatform(platform) {
+            currentPlatform = platform;
+            
+            // Update active button
+            document.querySelectorAll('.platform-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Re-render tables
+            renderTable(championData, 'championTableBody');
+            renderTable(eliteData, 'eliteTableBody', true);
+        }
+
+        // Initialize tables on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            renderTable(championData, 'championTableBody');
+            renderTable(eliteData, 'eliteTableBody', true);
+        });
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Smooth scroll animation for sections
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            });
+
+            document.querySelectorAll('.section').forEach((section) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(30px)';
+                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>

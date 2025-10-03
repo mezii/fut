@@ -230,6 +230,63 @@
             border-color: #e74c3c;
         }
 
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .view-btn {
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .view-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .view-btn.active {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            border-color: #27ae60;
+            box-shadow: 0 8px 20px rgba(39, 174, 96, 0.4);
+        }
+
+        .consolidated-section {
+            display: none;
+        }
+
+        .detailed-sections {
+            display: block;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .elite-badge {
+            background: linear-gradient(45deg, #9c88ff, #8c7ae6);
+            color: white;
+        }
+
+        .champion-badge {
+            background: linear-gradient(45deg, #ffd700, #f39c12);
+            color: #333;
+        }
+
         .footer {
             text-align: center;
             padding: 40px 20px;
@@ -274,6 +331,16 @@
                 flex-direction: column;
                 align-items: center;
             }
+
+            .view-toggle {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .view-btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
         }
 
         /* Animation for table rows */
@@ -309,52 +376,83 @@
             <p>Professional FIFA Ultimate Team Champions Boosting Services</p>
         </div>
 
+        <!-- View Toggle -->
+        <div class="view-toggle">
+            <button class="view-btn active" onclick="switchView('detailed')">📋 Detailed View</button>
+            <button class="view-btn" onclick="switchView('simple')">� Complete Price List</button>
+        </div>
+
         <!-- Currency and Platform Controls -->
         <div class="currency-tabs">
             <button class="tab-btn active" onclick="switchCurrency('vnd')">VNĐ Pricing</button>
             <button class="tab-btn" onclick="switchCurrency('usd')">USD Pricing</button>
         </div>
 
-        <div class="platform-toggle">
+        <div class="platform-toggle" id="platformToggle">
             <button class="platform-btn active" onclick="switchPlatform('pc')">PC</button>
             <button class="platform-btn" onclick="switchPlatform('console')">Console (PS/Xbox)</button>
         </div>
 
-        <!-- Champion Section -->
-        <div class="section">
-            <h2 class="section-title champion-title">Champion Tier</h2>
-            <div class="table-container">
-                <table class="price-table" id="championTable">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Rewards</th>
-                            <th class="price-column">Price</th>
-                        </tr>
-                    </thead>
-                    <tbody id="championTableBody">
-                        <!-- Champion data will be inserted here -->
-                    </tbody>
-                </table>
+        <!-- Detailed Sections -->
+        <div class="detailed-sections">
+            <!-- Champion Section -->
+            <div class="section">
+                <h2 class="section-title champion-title">Champion Tier</h2>
+                <div class="table-container">
+                    <table class="price-table" id="championTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Rewards</th>
+                                <th class="price-column">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="championTableBody">
+                            <!-- Champion data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Elite Section -->
+            <div class="section">
+                <h2 class="section-title elite-title">Elite Tier</h2>
+                <div class="table-container">
+                    <table class="price-table" id="eliteTable">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Rewards</th>
+                                <th class="price-column">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eliteTableBody">
+                            <!-- Elite data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <!-- Elite Section -->
-        <div class="section">
-            <h2 class="section-title elite-title">Elite Tier</h2>
-            <div class="table-container">
-                <table class="price-table" id="eliteTable">
-                    <thead>
-                        <tr>
-                            <th>Rank</th>
-                            <th>Rewards</th>
-                            <th class="price-column">Price</th>
-                        </tr>
-                    </thead>
-                    <tbody id="eliteTableBody">
-                        <!-- Elite data will be inserted here -->
-                    </tbody>
-                </table>
+        <!-- Consolidated Simple Table Section -->
+        <div class="consolidated-section">
+            <div class="section">
+                <h2 class="section-title" style="background: linear-gradient(45deg, #667eea, #764ba2);">� Complete Price List - All Platforms</h2>
+                <div class="table-container">
+                    <table class="price-table" id="consolidatedTable">
+                        <thead>
+                            <tr>
+                                <th>Tier</th>
+                                <th>Rank</th>
+                                <th class="price-column">PC Price</th>
+                                <th class="price-column">Console Price</th>
+                            </tr>
+                        </thead>
+                        <tbody id="consolidatedTableBody">
+                            <!-- Consolidated data will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -500,6 +598,7 @@
 
         let currentCurrency = 'vnd';
         let currentPlatform = 'pc';
+        let currentView = 'detailed';
 
         function formatRewards(rewards) {
             return rewards.map(reward => `<li>• ${reward}</li>`).join('');
@@ -531,6 +630,40 @@
             });
         }
 
+        function renderConsolidatedTable() {
+            const tbody = document.getElementById('consolidatedTableBody');
+            tbody.innerHTML = '';
+
+            // Combine all data with tier information
+            const allData = [
+                ...eliteData.map(item => ({ ...item, tier: 'Elite', tierClass: 'elite-badge' })),
+                ...championData.map(item => ({ ...item, tier: 'Champion', tierClass: 'champion-badge' }))
+            ];
+
+            allData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                
+                const pcPrice = item[currentCurrency].pc;
+                const consolePrice = item[currentCurrency].console;
+                const priceClass = currentCurrency === 'vnd' ? 'vnd-price' : 'usd-price';
+                
+                const isPcDeal = pcPrice.includes('Giá thỏa thuận') || pcPrice.includes('DM to deal');
+                const isConsoleDeal = consolePrice.includes('Giá thỏa thuận') || consolePrice.includes('DM to deal');
+                
+                row.innerHTML = `
+                    <td><span class="tier-badge ${item.tierClass}">${item.tier}</span></td>
+                    <td class="rank-cell">${item.rank}</td>
+                    <td class="price-cell ${isPcDeal ? 'deal-price' : priceClass}">${pcPrice}</td>
+                    <td class="price-cell ${isConsoleDeal ? 'deal-price' : priceClass}">${consolePrice}</td>
+                `;
+                
+                // Add animation delay
+                row.style.animationDelay = `${index * 0.05}s`;
+                
+                tbody.appendChild(row);
+            });
+        }
+
         function switchCurrency(currency) {
             currentCurrency = currency;
             
@@ -538,9 +671,13 @@
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Re-render tables
-            renderTable(championData, 'championTableBody');
-            renderTable(eliteData, 'eliteTableBody', true);
+            // Re-render tables based on current view
+            if (currentView === 'detailed') {
+                renderTable(championData, 'championTableBody');
+                renderTable(eliteData, 'eliteTableBody', true);
+            } else {
+                renderConsolidatedTable();
+            }
         }
 
         function switchPlatform(platform) {
@@ -550,9 +687,43 @@
             document.querySelectorAll('.platform-btn').forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
             
-            // Re-render tables
-            renderTable(championData, 'championTableBody');
-            renderTable(eliteData, 'eliteTableBody', true);
+            // Re-render tables based on current view
+            if (currentView === 'detailed') {
+                renderTable(championData, 'championTableBody');
+                renderTable(eliteData, 'eliteTableBody', true);
+            } else {
+                renderConsolidatedTable();
+            }
+        }
+
+        function switchView(view) {
+            currentView = view;
+            
+            // Update active button
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide sections
+            const detailedSections = document.querySelector('.detailed-sections');
+            const consolidatedSection = document.querySelector('.consolidated-section');
+            const platformToggle = document.getElementById('platformToggle');
+            
+            if (view === 'detailed') {
+                detailedSections.style.display = 'block';
+                consolidatedSection.style.display = 'none';
+                platformToggle.style.display = 'flex';  // Show platform toggle for detailed view
+                
+                // Render detailed tables
+                renderTable(championData, 'championTableBody');
+                renderTable(eliteData, 'eliteTableBody', true);
+            } else {
+                detailedSections.style.display = 'none';
+                consolidatedSection.style.display = 'block';
+                platformToggle.style.display = 'none';  // Hide platform toggle for complete price list
+                
+                // Render consolidated table
+                renderConsolidatedTable();
+            }
         }
 
         // Initialize tables on page load

@@ -271,6 +271,53 @@
             box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
         }
 
+        .admin-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 18px;
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid rgba(231, 76, 60, 0.5);
+            border-radius: 15px;
+            color: #e74c3c;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.85rem;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .admin-btn:hover {
+            background: rgba(231, 76, 60, 0.3);
+            border-color: #e74c3c;
+            transform: translateY(-1px);
+        }
+
+        .refresh-btn {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            padding: 8px 12px;
+            background: rgba(52, 152, 219, 0.2);
+            border: 1px solid rgba(52, 152, 219, 0.5);
+            border-radius: 15px;
+            color: #3498db;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            font-size: 0.8rem;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+
+        .refresh-btn:hover {
+            background: rgba(52, 152, 219, 0.3);
+            border-color: #3498db;
+            transform: translateY(-1px);
+        }
+
         .consolidated-section {
             display: none;
         }
@@ -462,6 +509,20 @@
                 padding: 12px 20px;
                 font-size: 0.9rem;
             }
+
+            .admin-btn {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                font-size: 0.75rem;
+            }
+
+            .refresh-btn {
+                top: 50px;
+                right: 10px;
+                padding: 6px 8px;
+                font-size: 0.7rem;
+            }
         }
 
         /* Animation for table rows */
@@ -487,6 +548,29 @@
         .price-table tbody tr:nth-child(odd) {
             animation-delay: 0.2s;
         }
+
+        /* Notification animations */
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
@@ -499,9 +583,15 @@
 
         <!-- View Toggle -->
         <div class="view-toggle">
-            <button class="view-btn active" onclick="switchView('detailed')"><img src="catalogue.png" alt="Detailed View"></button>
-            <button class="view-btn" onclick="switchView('simple')"><img src="table.png" alt="Simple View"></button>
+            <button class="view-btn active" onclick="switchView('detailed')">🔍 Details</button>
+            <button class="view-btn" onclick="switchView('simple')">⚡ Quick List</button>
         </div>
+
+        <!-- Admin Button -->
+        <a href="admin.html" class="admin-btn">🔧 Admin</a>
+        
+        <!-- Refresh Button -->
+        <button class="refresh-btn" onclick="refreshData()" title="Refresh prices from admin">🔄 Refresh</button>
 
         <!-- Currency and Platform Controls -->
         <div class="currency-tabs">
@@ -628,138 +718,191 @@
     </div>
 
     <script>
-        // Data from the CSV attachments
-        const championData = [
-            {
-                rank: "Champion I: 10 points",
-                rewards: [
-                    "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
-                    "x1 85+ 3x Rare Gold Players Pack",
-                    "x2 81+ TOTW Player Pack",
-                    "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
-                    "25,000 Coins"
-                ],
-                vnd: { pc: "400,000", console: "600,000" },
-                usd: { pc: "20$", console: "28$" }
-            },
-            {
-                rank: "Champion II: 9 points",
-                rewards: [
-                    "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
-                    "x1 85+ 2x Rare Gold Players Pack",
-                    "x1 81+ TOTW Player Pack",
-                    "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
-                    "20,000 Coins"
-                ],
-                vnd: { pc: "360,000", console: "550,000" },
-                usd: { pc: "15$", console: "25$" }
-            },
-            {
-                rank: "Champion III: 8 points",
-                rewards: [
-                    "x1 82+ 10x Rare Gold Players Pack (Untradeable)",
-                    "x1 83+ Rare Gold Players Pack",
-                    "x1 85+ 2x Rare Gold Players Pack",
-                    "x1 81+ TOTW Player Pack",
-                    "16,000 Coins"
-                ],
-                vnd: { pc: "320,000", console: "450,000" },
-                usd: { pc: "14$", console: "20$" }
-            },
-            {
-                rank: "Champion IV: 7 points",
-                rewards: [
-                    "x1 82+ Rare Gold Players Pack (Untradeable)",
-                    "x1 84+ 3x Rare Gold Players Pack",
-                    "x1 81+ TOTW Player Pack",
-                    "13,000 Coins"
-                ],
-                vnd: { pc: "250,000", console: "400,000" },
-                usd: { pc: "10$", console: "18$" }
-            },
-            {
-                rank: "Champion V: 6 points",
-                rewards: [
-                    "x1 80+ 10x Rare Gold Players Pack (Untradeable)",
-                    "x1 84+ 3x Rare Gold Players Pack",
-                    "x1 81+ TOTW Player Pack",
-                    "11,000 Coins"
-                ],
-                vnd: { pc: "200,000", console: "350,000" },
-                usd: { pc: "8$", console: "15$" }
-            }
-        ];
+        // Data variables - will be loaded from JSON file
+        let championData = [];
+        let eliteData = [];
 
-        const eliteData = [
-            {
-                rank: "Elite I: 15 Wins",
-                rewards: [
-                    "x1 84+ 10x Rare Gold Players Pack (Untradeable)",
-                    "x1 83+ 10x Rare Gold Players Pack",
-                    "x1 84+ 10x Rare Gold Players Pack",
-                    "x1 88+ 3x Rare Gold Players Pack",
-                    "x1 83+ 3x TOTW Player Pack",
-                    "x2 Cornerstones Guarantee Pack (Untradeable)",
-                    "85,000 Coins"
-                ],
-                vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
-                usd: { pc: "DM to deal", console: "DM to deal" }
-            },
-            {
-                rank: "Elite II: 14 points",
-                rewards: [
-                    "x1 84+ 10x Rare Gold Players Pack (Untradeable)",
-                    "x1 83+ 10x Rare Gold Players Pack",
-                    "x1 84+ 6x Rare Gold Players Pack",
-                    "x1 86+ 3x Rare Gold Players Pack",
-                    "x1 83+ 3x TOTW Player Pack",
-                    "x1 Cornerstones Guarantee Pack (Untradeable)",
-                    "65,000 Coins"
-                ],
-                vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
-                usd: { pc: "DM to deal", console: "DM to deal" }
-            },
-            {
-                rank: "Elite III: 13 points",
-                rewards: [
-                    "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
-                    "x1 82+ 10x Rare Gold Players Pack",
-                    "x1 84+ 6x Rare Gold Players Pack",
-                    "x1 86+ 3x Rare Gold Players Pack",
-                    "x2 81+ TOTW Player Pack",
-                    "x1 Cornerstones Guarantee Pack (Untradeable)",
-                    "50,000 Coins"
-                ],
-                vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
-                usd: { pc: "DM to deal", console: "DM to deal" }
-            },
-            {
-                rank: "Elite IV: 12 points",
-                rewards: [
-                    "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
-                    "x1 82+ 10x Rare Gold Players Pack",
-                    "x1 86+ 3x Rare Gold Players Pack",
-                    "x2 81+ TOTW Player Pack",
-                    "x1 Cornerstones Guarantee Pack (Untradeable)",
-                    "40,000 Coins"
-                ],
-                vnd: { pc: "800,000", console: "1,100,000" },
-                usd: { pc: "35$", console: "50$" }
-            },
-            {
-                rank: "Elite V: 11 points",
-                rewards: [
-                    "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
-                    "x1 82+ 10x Rare Gold Players Pack",
-                    "x1 85+ 3x Rare Gold Players Pack",
-                    "x2 81+ TOTW Player Pack",
-                    "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
-                    "30,000 Coins"
-                ],
-                vnd: { pc: "600,000", console: "900,000" },
-                usd: { pc: "30$", console: "40$" }
+        // Load data from localStorage or JSON file
+        function loadData() {
+            try {
+                // First try to load from localStorage (updated by admin)
+                const savedData = localStorage.getItem('futChampionsData');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    championData = data.championData;
+                    eliteData = data.eliteData;
+                    
+                    // Initialize tables after data is loaded
+                    renderTable(championData, 'championTableBody');
+                    renderTable(eliteData, 'eliteTableBody', true);
+                    console.log('Data loaded from localStorage (admin updates)');
+                    return;
+                }
+                
+                // Fallback to JSON file
+                fetch('data.json')
+                    .then(response => {
+                        if (!response.ok) throw new Error('Could not load data file');
+                        return response.json();
+                    })
+                    .then(data => {
+                        championData = data.championData;
+                        eliteData = data.eliteData;
+                        
+                        // Initialize tables after data is loaded
+                        renderTable(championData, 'championTableBody');
+                        renderTable(eliteData, 'eliteTableBody', true);
+                        console.log('Data loaded from JSON file');
+                    })
+                    .catch(error => {
+                        console.error('Error loading data:', error);
+                        // Fallback to hardcoded data if JSON file fails
+                        loadFallbackData();
+                    });
+            } catch (error) {
+                console.error('Error loading data:', error);
+                loadFallbackData();
             }
-        ];
+        }
+
+        // Fallback data in case JSON file is not available
+        function loadFallbackData() {
+            championData = [
+                {
+                    rank: "Champion I: 10 points",
+                    rewards: [
+                        "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                        "x1 85+ 3x Rare Gold Players Pack",
+                        "x2 81+ TOTW Player Pack",
+                        "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+                        "25,000 Coins"
+                    ],
+                    vnd: { pc: "400,000", console: "600,000" },
+                    usd: { pc: "20$", console: "28$" }
+                },
+                {
+                    rank: "Champion II: 9 points",
+                    rewards: [
+                        "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                        "x1 85+ 2x Rare Gold Players Pack",
+                        "x1 81+ TOTW Player Pack",
+                        "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+                        "20,000 Coins"
+                    ],
+                    vnd: { pc: "360,000", console: "550,000" },
+                    usd: { pc: "15$", console: "25$" }
+                },
+                {
+                    rank: "Champion III: 8 points",
+                    rewards: [
+                        "x1 82+ 10x Rare Gold Players Pack (Untradeable)",
+                        "x1 83+ Rare Gold Players Pack",
+                        "x1 85+ 2x Rare Gold Players Pack",
+                        "x1 81+ TOTW Player Pack",
+                        "16,000 Coins"
+                    ],
+                    vnd: { pc: "320,000", console: "450,000" },
+                    usd: { pc: "14$", console: "20$" }
+                },
+                {
+                    rank: "Champion IV: 7 points",
+                    rewards: [
+                        "x1 82+ Rare Gold Players Pack (Untradeable)",
+                        "x1 84+ 3x Rare Gold Players Pack",
+                        "x1 81+ TOTW Player Pack",
+                        "13,000 Coins"
+                    ],
+                    vnd: { pc: "250,000", console: "400,000" },
+                    usd: { pc: "10$", console: "18$" }
+                },
+                {
+                    rank: "Champion V: 6 points",
+                    rewards: [
+                        "x1 80+ 10x Rare Gold Players Pack (Untradeable)",
+                        "x1 84+ 3x Rare Gold Players Pack",
+                        "x1 81+ TOTW Player Pack",
+                        "11,000 Coins"
+                    ],
+                    vnd: { pc: "200,000", console: "350,000" },
+                    usd: { pc: "8$", console: "15$" }
+                }
+            ];
+
+            eliteData = [
+                {
+                    rank: "Elite I: 15 Wins",
+                    rewards: [
+                        "x1 84+ 10x Rare Gold Players Pack (Untradeable)",
+                        "x1 83+ 10x Rare Gold Players Pack",
+                        "x1 84+ 10x Rare Gold Players Pack",
+                        "x1 88+ 3x Rare Gold Players Pack",
+                        "x1 83+ 3x TOTW Player Pack",
+                        "x2 Cornerstones Guarantee Pack (Untradeable)",
+                        "85,000 Coins"
+                    ],
+                    vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
+                    usd: { pc: "DM to deal", console: "DM to deal" }
+                },
+                {
+                    rank: "Elite II: 14 points",
+                    rewards: [
+                        "x1 84+ 10x Rare Gold Players Pack (Untradeable)",
+                        "x1 83+ 10x Rare Gold Players Pack",
+                        "x1 84+ 6x Rare Gold Players Pack",
+                        "x1 86+ 3x Rare Gold Players Pack",
+                        "x1 83+ 3x TOTW Player Pack",
+                        "x1 Cornerstones Guarantee Pack (Untradeable)",
+                        "65,000 Coins"
+                    ],
+                    vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
+                    usd: { pc: "DM to deal", console: "DM to deal" }
+                },
+                {
+                    rank: "Elite III: 13 points",
+                    rewards: [
+                        "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                        "x1 82+ 10x Rare Gold Players Pack",
+                        "x1 84+ 6x Rare Gold Players Pack",
+                        "x1 86+ 3x Rare Gold Players Pack",
+                        "x2 81+ TOTW Player Pack",
+                        "x1 Cornerstones Guarantee Pack (Untradeable)",
+                        "50,000 Coins"
+                    ],
+                    vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
+                    usd: { pc: "DM to deal", console: "DM to deal" }
+                },
+                {
+                    rank: "Elite IV: 12 points",
+                    rewards: [
+                        "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                        "x1 82+ 10x Rare Gold Players Pack",
+                        "x1 86+ 3x Rage Gold Players Pack",
+                        "x2 81+ TOTW Player Pack",
+                        "x1 Cornerstones Guarantee Pack (Untradeable)",
+                        "40,000 Coins"
+                    ],
+                    vnd: { pc: "800,000", console: "1,100,000" },
+                    usd: { pc: "35$", console: "50$" }
+                },
+                {
+                    rank: "Elite V: 11 points",
+                    rewards: [
+                        "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                        "x1 82+ 10x Rare Gold Players Pack",
+                        "x1 85+ 3x Rare Gold Players Pack",
+                        "x2 81+ TOTW Player Pack",
+                        "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+                        "30,000 Coins"
+                    ],
+                    vnd: { pc: "600,000", console: "900,000" },
+                    usd: { pc: "30$", console: "40$" }
+                }
+            ];
+
+            // Initialize tables with fallback data
+            renderTable(championData, 'championTableBody');
+            renderTable(eliteData, 'eliteTableBody', true);
+        }
 
         let currentCurrency = 'vnd';
         let currentPlatform = 'pc';
@@ -891,10 +1034,73 @@
             }
         }
 
+        // Listen for localStorage changes (when admin updates data)
+        function setupDataListener() {
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'futChampionsData' && e.newValue) {
+                    try {
+                        const data = JSON.parse(e.newValue);
+                        championData = data.championData;
+                        eliteData = data.eliteData;
+                        
+                        // Re-render tables with new data
+                        if (currentView === 'detailed') {
+                            renderTable(championData, 'championTableBody');
+                            renderTable(eliteData, 'eliteTableBody', true);
+                        } else {
+                            renderConsolidatedTable();
+                        }
+                        
+                        console.log('Data updated from admin panel');
+                        
+                        // Show a brief notification
+                        showUpdateNotification();
+                    } catch (error) {
+                        console.error('Error parsing updated data:', error);
+                    }
+                }
+            });
+        }
+
+        // Manual refresh data
+        function refreshData() {
+            loadData();
+            showUpdateNotification('🔄 Dữ liệu đã được làm mới!');
+        }
+
+        // Show update notification
+        function showUpdateNotification(message = '✅ Giá đã được cập nhật!') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 120px;
+                right: 20px;
+                background: linear-gradient(45deg, #27ae60, #2ecc71);
+                color: white;
+                padding: 12px 20px;
+                border-radius: 10px;
+                font-weight: 600;
+                z-index: 10000;
+                box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        document.body.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+
         // Initialize tables on page load
         document.addEventListener('DOMContentLoaded', function() {
-            renderTable(championData, 'championTableBody');
-            renderTable(eliteData, 'eliteTableBody', true);
+            loadData(); // Load data from localStorage or JSON file
+            setupDataListener(); // Listen for admin updates
         });
 
         // Add some interactive effects

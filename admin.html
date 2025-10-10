@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIFA FUT Champions - Admin Panel</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 50%, #9b59b6 100%);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            color: #b8bcc8;
+        }
+
+        .admin-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border-color: #e74c3c;
+        }
+
+        .admin-section {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ffd700;
+        }
+
+        .edit-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .edit-table th {
+            background: linear-gradient(45deg, #34495e, #2c3e50);
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .edit-table td {
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            vertical-align: top;
+        }
+
+        .edit-table input[type="text"] {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+        }
+
+        .edit-table input[type="text"]:focus {
+            outline: none;
+            border-color: #3498db;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .edit-table input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .rank-column {
+            width: 200px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+
+        .price-input {
+            width: 100px !important;
+        }
+
+        .rewards-textarea {
+            width: 100%;
+            min-height: 80px;
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .rewards-textarea:focus {
+            outline: none;
+            border-color: #3498db;
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-message {
+            text-align: center;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid #27ae60;
+            color: #2ecc71;
+        }
+
+        .status-error {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+        }
+
+        .tier-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .elite-badge {
+            background: linear-gradient(45deg, #9c88ff, #8c7ae6);
+            color: white;
+        }
+
+        .champion-badge {
+            background: linear-gradient(45deg, #ffd700, #f39c12);
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .admin-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .edit-table {
+                font-size: 12px;
+            }
+
+            .edit-table th,
+            .edit-table td {
+                padding: 8px 5px;
+            }
+
+            .btn-group {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 FIFA FUT Champions - Admin Panel</h1>
+            <p>Quản lý giá và thông tin dịch vụ boost</p>
+        </div>
+
+        <div class="admin-nav">
+            <a href="index.html" class="nav-btn">🏠 Trang Chủ</a>
+            <button class="nav-btn active" onclick="showSection('champion')">🏆 Champion Tier</button>
+            <button class="nav-btn" onclick="showSection('elite')">⭐ Elite Tier</button>
+            <button class="nav-btn" onclick="exportData()">📁 Xuất Dữ Liệu</button>
+            <button class="nav-btn" onclick="importData()">📂 Nhập Dữ Liệu</button>
+        </div>
+
+        <div id="statusMessage" class="status-message" style="display: none;"></div>
+        
+        <div id="loadingMessage" class="status-message" style="background: rgba(52, 152, 219, 0.2); border: 1px solid #3498db; color: #3498db;">
+            ⏳ Đang tải dữ liệu...
+        </div>
+
+        <!-- Champion Section -->
+        <div id="championSection" class="admin-section">
+            <div class="section-title">
+                <span class="tier-badge champion-badge">Champion Tier</span>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="edit-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>VNĐ PC</th>
+                            <th>VNĐ Console</th>
+                            <th>USD PC</th>
+                            <th>USD Console</th>
+                            <th>Rewards</th>
+                        </tr>
+                    </thead>
+                    <tbody id="championTableBody">
+                        <!-- Champion data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="saveChampionData()">💾 Lưu Champion</button>
+                <button class="btn btn-warning" onclick="resetChampionData()">🔄 Khôi Phục</button>
+            </div>
+        </div>
+
+        <!-- Elite Section -->
+        <div id="eliteSection" class="admin-section" style="display: none;">
+            <div class="section-title">
+                <span class="tier-badge elite-badge">Elite Tier</span>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="edit-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>VNĐ PC</th>
+                            <th>VNĐ Console</th>
+                            <th>USD PC</th>
+                            <th>USD Console</th>
+                            <th>Rewards</th>
+                        </tr>
+                    </thead>
+                    <tbody id="eliteTableBody">
+                        <!-- Elite data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="saveEliteData()">💾 Lưu Elite</button>
+                <button class="btn btn-warning" onclick="resetEliteData()">🔄 Khôi Phục</button>
+            </div>
+        </div>
+
+        <!-- Hidden file input for import -->
+        <input type="file" id="fileInput" accept=".json" style="display: none;" onchange="handleFileImport(event)">
+    </div>
+
+    <script>
+        let championData = [];
+        let eliteData = [];
+        let originalData = {};
+
+        // Load data from localStorage or use fallback data
+        function loadData() {
+            const loadingEl = document.getElementById('loadingMessage');
+            
+            try {
+                // First try to load from localStorage
+                const savedData = localStorage.getItem('futChampionsData');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    championData = [...data.championData];
+                    eliteData = [...data.eliteData];
+                    originalData = JSON.parse(JSON.stringify(data));
+                    
+                    loadingEl.style.display = 'none';
+                    renderTables();
+                    showMessage('Dữ liệu đã được tải từ bộ nhớ local!', 'success');
+                    return;
+                }
+                
+                // Fallback to JSON file
+                fetch('data.json')
+                    .then(response => {
+                        if (!response.ok) throw new Error('Cannot load data.json file');
+                        return response.json();
+                    })
+                    .then(data => {
+                        championData = [...data.championData];
+                        eliteData = [...data.eliteData];
+                        originalData = JSON.parse(JSON.stringify(data));
+                        
+                        loadingEl.style.display = 'none';
+                        renderTables();
+                        showMessage('Dữ liệu đã được tải từ file JSON!', 'success');
+                    })
+                    .catch(error => {
+                        console.log('Loading fallback data due to:', error.message);
+                        loadingEl.style.display = 'none';
+                        loadFallbackData();
+                    });
+            } catch (error) {
+                console.log('Loading fallback data due to:', error.message);
+                loadingEl.style.display = 'none';
+                loadFallbackData();
+            }
+        }
+
+        // Fallback data if JSON file cannot be loaded
+        function loadFallbackData() {
+            const fallbackData = {
+                championData: [
+                    {
+                        rank: "Champion I: 10 points",
+                        rewards: [
+                            "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                            "x1 85+ 3x Rare Gold Players Pack",
+                            "x2 81+ TOTW Player Pack",
+                            "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+                            "25,000 Coins"
+                        ],
+                        vnd: { pc: "400,000", console: "600,000" },
+                        usd: { pc: "20$", console: "28$" }
+                    },
+                    {
+                        rank: "Champion II: 9 points",
+                        rewards: [
+                            "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                            "x1 85+ 2x Rare Gold Players Pack",
+                            "x1 81+ TOTW Player Pack",
+                            "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+                            "20,000 Coins"
+                        ],
+                        vnd: { pc: "360,000", console: "550,000" },
+                        usd: { pc: "15$", console: "25$" }
+                    },
+                    {
+                        rank: "Champion III: 8 points",
+                        rewards: [
+                            "x1 82+ 10x Rare Gold Players Pack (Untradeable)",
+                            "x1 83+ Rare Gold Players Pack",
+                            "x1 85+ 2x Rare Gold Players Pack",
+                            "x1 81+ TOTW Player Pack",
+                            "16,000 Coins"
+                        ],
+                        vnd: { pc: "320,000", console: "450,000" },
+                        usd: { pc: "14$", console: "20$" }
+                    },
+                    {
+                        rank: "Champion IV: 7 points",
+                        rewards: [
+                            "x1 82+ Rare Gold Players Pack (Untradeable)",
+                            "x1 84+ 3x Rare Gold Players Pack",
+                            "x1 81+ TOTW Player Pack",
+                            "13,000 Coins"
+                        ],
+                        vnd: { pc: "250,000", console: "400,000" },
+                        usd: { pc: "10$", console: "18$" }
+                    },
+                    {
+                        rank: "Champion V: 6 points",
+                        rewards: [
+                            "x1 80+ 10x Rare Gold Players Pack (Untradeable)",
+                            "x1 84+ 3x Rare Gold Players Pack",
+                            "x1 81+ TOTW Player Pack",
+                            "11,000 Coins"
+                        ],
+                        vnd: { pc: "200,000", console: "350,000" },
+                        usd: { pc: "8$", console: "15$" }
+                    }
+                ],
+                eliteData: [
+                    {
+                        rank: "Elite I: 15 Wins",
+                        rewards: [
+                            "x1 84+ 10x Rare Gold Players Pack (Untradeable)",
+                            "x1 83+ 10x Rare Gold Players Pack",
+                            "x1 84+ 10x Rare Gold Players Pack",
+                            "x1 88+ 3x Rare Gold Players Pack",
+                            "x1 83+ 3x TOTW Player Pack",
+                            "x2 Cornerstones Guarantee Pack (Untradeable)",
+                            "85,000 Coins"
+                        ],
+                        vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
+                        usd: { pc: "DM to deal", console: "DM to deal" }
+                    },
+                    {
+                        rank: "Elite II: 14 points",
+                        rewards: [
+                            "x1 84+ 10x Rare Gold Players Pack (Untradeable)",
+                            "x1 83+ 10x Rare Gold Players Pack",
+                            "x1 84+ 6x Rare Gold Players Pack",
+                            "x1 86+ 3x Rare Gold Players Pack",
+                            "x1 83+ 3x TOTW Player Pack",
+                            "x1 Cornerstones Guarantee Pack (Untradeable)",
+                            "65,000 Coins"
+                        ],
+                        vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
+                        usd: { pc: "DM to deal", console: "DM to deal" }
+                    },
+                    {
+                        rank: "Elite III: 13 points",
+                        rewards: [
+                            "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                            "x1 82+ 10x Rare Gold Players Pack",
+                            "x1 84+ 6x Rare Gold Players Pack",
+                            "x1 86+ 3x Rare Gold Players Pack",
+                            "x2 81+ TOTW Player Pack",
+                            "x1 Cornerstones Guarantee Pack (Untradeable)",
+                            "50,000 Coins"
+                        ],
+                        vnd: { pc: "Giá thỏa thuận", console: "Giá thỏa thuận" },
+                        usd: { pc: "DM to deal", console: "DM to deal" }
+                    },
+                    {
+                        rank: "Elite IV: 12 points",
+                        rewards: [
+                            "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                            "x1 82+ 10x Rare Gold Players Pack",
+                            "x1 86+ 3x Rare Gold Players Pack",
+                            "x2 81+ TOTW Player Pack",
+                            "x1 Cornerstones Guarantee Pack (Untradeable)",
+                            "40,000 Coins"
+                        ],
+                        vnd: { pc: "800,000", console: "1,100,000" },
+                        usd: { pc: "35$", console: "50$" }
+                    },
+                    {
+                        rank: "Elite V: 11 points",
+                        rewards: [
+                            "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+                            "x1 82+ 10x Rare Gold Players Pack",
+                            "x1 85+ 3x Rare Gold Players Pack",
+                            "x2 81+ TOTW Player Pack",
+                            "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+                            "30,000 Coins"
+                        ],
+                        vnd: { pc: "600,000", console: "900,000" },
+                        usd: { pc: "30$", console: "40$" }
+                    }
+                ]
+            };
+
+            championData = [...fallbackData.championData];
+            eliteData = [...fallbackData.eliteData];
+            originalData = JSON.parse(JSON.stringify(fallbackData));
+            
+            // Save fallback data to localStorage for main page to use
+            saveDataToStorage();
+            
+            renderTables();
+            showMessage('Đang sử dụng dữ liệu mẫu. Bạn có thể chỉnh sửa và lưu để cập nhật trang chủ.', 'success');
+        }
+
+        function renderTables() {
+            console.log('Rendering tables...', { championData, eliteData });
+            renderChampionTable();
+            renderEliteTable();
+        }
+
+        function renderChampionTable() {
+            const tbody = document.getElementById('championTableBody');
+            if (!tbody) {
+                console.error('Champion table body not found!');
+                return;
+            }
+            tbody.innerHTML = '';
+
+            if (!championData || championData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Không có dữ liệu Champion</td></tr>';
+                return;
+            }
+
+            championData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="rank-column">${item.rank}</td>
+                    <td><input type="text" class="price-input" value="${item.vnd.pc}" data-tier="champion" data-index="${index}" data-currency="vnd" data-platform="pc"></td>
+                    <td><input type="text" class="price-input" value="${item.vnd.console}" data-tier="champion" data-index="${index}" data-currency="vnd" data-platform="console"></td>
+                    <td><input type="text" class="price-input" value="${item.usd.pc}" data-tier="champion" data-index="${index}" data-currency="usd" data-platform="pc"></td>
+                    <td><input type="text" class="price-input" value="${item.usd.console}" data-tier="champion" data-index="${index}" data-currency="usd" data-platform="console"></td>
+                    <td><textarea class="rewards-textarea" data-tier="champion" data-index="${index}" placeholder="Nhập rewards, mỗi dòng một item">${item.rewards.join('\n')}</textarea></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderEliteTable() {
+            const tbody = document.getElementById('eliteTableBody');
+            if (!tbody) {
+                console.error('Elite table body not found!');
+                return;
+            }
+            tbody.innerHTML = '';
+
+            if (!eliteData || eliteData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center;">Không có dữ liệu Elite</td></tr>';
+                return;
+            }
+
+            eliteData.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="rank-column">${item.rank}</td>
+                    <td><input type="text" class="price-input" value="${item.vnd.pc}" data-tier="elite" data-index="${index}" data-currency="vnd" data-platform="pc"></td>
+                    <td><input type="text" class="price-input" value="${item.vnd.console}" data-tier="elite" data-index="${index}" data-currency="vnd" data-platform="console"></td>
+                    <td><input type="text" class="price-input" value="${item.usd.pc}" data-tier="elite" data-index="${index}" data-currency="usd" data-platform="pc"></td>
+                    <td><input type="text" class="price-input" value="${item.usd.console}" data-tier="elite" data-index="${index}" data-currency="usd" data-platform="console"></td>
+                    <td><textarea class="rewards-textarea" data-tier="elite" data-index="${index}" placeholder="Nhập rewards, mỗi dòng một item">${item.rewards.join('\n')}</textarea></td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function showSection(section) {
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show/hide sections
+            document.getElementById('championSection').style.display = section === 'champion' ? 'block' : 'none';
+            document.getElementById('eliteSection').style.display = section === 'elite' ? 'block' : 'none';
+        }
+
+        function collectFormData(tier) {
+            const inputs = document.querySelectorAll(`[data-tier="${tier}"]`);
+            const data = tier === 'champion' ? [...championData] : [...eliteData];
+
+            inputs.forEach(input => {
+                const index = parseInt(input.dataset.index);
+                
+                if (input.classList.contains('rewards-textarea')) {
+                    const rewards = input.value.split('\n').filter(reward => reward.trim() !== '');
+                    data[index].rewards = rewards;
+                } else {
+                    const currency = input.dataset.currency;
+                    const platform = input.dataset.platform;
+                    data[index][currency][platform] = input.value;
+                }
+            });
+
+            return data;
+        }
+
+        function saveChampionData() {
+            try {
+                const updatedData = collectFormData('champion');
+                championData = updatedData;
+                saveDataToStorage();
+                showMessage('Dữ liệu Champion đã được lưu và cập nhật trang chủ!', 'success');
+            } catch (error) {
+                showMessage('Lỗi khi lưu dữ liệu Champion: ' + error.message, 'error');
+            }
+        }
+
+        function saveEliteData() {
+            try {
+                const updatedData = collectFormData('elite');
+                eliteData = updatedData;
+                saveDataToStorage();
+                showMessage('Dữ liệu Elite đã được lưu và cập nhật trang chủ!', 'success');
+            } catch (error) {
+                showMessage('Lỗi khi lưu dữ liệu Elite: ' + error.message, 'error');
+            }
+        }
+
+        function saveDataToStorage() {
+            const dataToSave = {
+                championData: championData,
+                eliteData: eliteData,
+                lastUpdated: new Date().toISOString()
+            };
+
+            // Save to localStorage for immediate access by main page
+            localStorage.setItem('futChampionsData', JSON.stringify(dataToSave));
+            
+            // Trigger storage event for other tabs/windows
+            window.dispatchEvent(new StorageEvent('storage', {
+                key: 'futChampionsData',
+                newValue: JSON.stringify(dataToSave)
+            }));
+        }
+
+        function resetChampionData() {
+            championData = JSON.parse(JSON.stringify(originalData.championData));
+            renderChampionTable();
+            showMessage('Dữ liệu Champion đã được khôi phục!', 'success');
+        }
+
+        function resetEliteData() {
+            eliteData = JSON.parse(JSON.stringify(originalData.eliteData));
+            renderEliteTable();
+            showMessage('Dữ liệu Elite đã được khôi phục!', 'success');
+        }
+
+        function exportData() {
+            const dataToExport = {
+                championData: championData,
+                eliteData: eliteData,
+                exportDate: new Date().toISOString()
+            };
+
+            const blob = new Blob([JSON.stringify(dataToExport, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `fut-champions-data-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showMessage('Dữ liệu đã được xuất để sao lưu!', 'success');
+        }
+
+        function importData() {
+            document.getElementById('fileInput').click();
+        }
+
+        function handleFileImport(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    if (importedData.championData && importedData.eliteData) {
+                        championData = importedData.championData;
+                        eliteData = importedData.eliteData;
+                        renderTables();
+                        showMessage('Dữ liệu đã được nhập thành công!', 'success');
+                    } else {
+                        throw new Error('File không có đúng định dạng dữ liệu');
+                    }
+                } catch (error) {
+                    showMessage('Lỗi khi nhập dữ liệu: ' + error.message, 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function showMessage(message, type) {
+            const messageEl = document.getElementById('statusMessage');
+            messageEl.textContent = message;
+            messageEl.className = `status-message status-${type}`;
+            messageEl.style.display = 'block';
+            
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>

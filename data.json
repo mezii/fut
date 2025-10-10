@@ -1,0 +1,132 @@
+{
+  "championData": [
+    {
+      "rank": "Champion I: 10 points",
+      "rewards": [
+        "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+        "x1 85+ 3x Rare Gold Players Pack",
+        "x2 81+ TOTW Player Pack",
+        "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+        "25,000 Coins"
+      ],
+      "vnd": { "pc": "400,000", "console": "600,000" },
+      "usd": { "pc": "20$", "console": "28$" }
+    },
+    {
+      "rank": "Champion II: 9 points",
+      "rewards": [
+        "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+        "x1 85+ 2x Rare Gold Players Pack",
+        "x1 81+ TOTW Player Pack",
+        "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+        "20,000 Coins"
+      ],
+      "vnd": { "pc": "360,000", "console": "550,000" },
+      "usd": { "pc": "15$", "console": "25$" }
+    },
+    {
+      "rank": "Champion III: 8 points",
+      "rewards": [
+        "x1 82+ 10x Rare Gold Players Pack (Untradeable)",
+        "x1 83+ Rare Gold Players Pack",
+        "x1 85+ 2x Rare Gold Players Pack",
+        "x1 81+ TOTW Player Pack",
+        "16,000 Coins"
+      ],
+      "vnd": { "pc": "320,000", "console": "450,000" },
+      "usd": { "pc": "14$", "console": "20$" }
+    },
+    {
+      "rank": "Champion IV: 7 points",
+      "rewards": [
+        "x1 82+ Rare Gold Players Pack (Untradeable)",
+        "x1 84+ 3x Rare Gold Players Pack",
+        "x1 81+ TOTW Player Pack",
+        "13,000 Coins"
+      ],
+      "vnd": { "pc": "250,000", "console": "400,000" },
+      "usd": { "pc": "10$", "console": "18$" }
+    },
+    {
+      "rank": "Champion V: 6 points",
+      "rewards": [
+        "x1 80+ 10x Rare Gold Players Pack (Untradeable)",
+        "x1 84+ 3x Rare Gold Players Pack",
+        "x1 81+ TOTW Player Pack",
+        "11,000 Coins"
+      ],
+      "vnd": { "pc": "200,000", "console": "350,000" },
+      "usd": { "pc": "8$", "console": "15$" }
+    }
+  ],
+  "eliteData": [
+    {
+      "rank": "Elite I: 15 Wins",
+      "rewards": [
+        "x1 84+ 10x Rare Gold Players Pack (Untradeable)",
+        "x1 83+ 10x Rare Gold Players Pack",
+        "x1 84+ 10x Rare Gold Players Pack",
+        "x1 88+ 3x Rare Gold Players Pack",
+        "x1 83+ 3x TOTW Player Pack",
+        "x2 Cornerstones Guarantee Pack (Untradeable)",
+        "85,000 Coins"
+      ],
+      "vnd": { "pc": "Giá thỏa thuận", "console": "Giá thỏa thuận" },
+      "usd": { "pc": "DM to deal", "console": "DM to deal" }
+    },
+    {
+      "rank": "Elite II: 14 points",
+      "rewards": [
+        "x1 84+ 10x Rare Gold Players Pack (Untradeable)",
+        "x1 83+ 10x Rare Gold Players Pack",
+        "x1 84+ 6x Rare Gold Players Pack",
+        "x1 86+ 3x Rare Gold Players Pack",
+        "x1 83+ 3x TOTW Player Pack",
+        "x1 Cornerstones Guarantee Pack (Untradeable)",
+        "65,000 Coins"
+      ],
+      "vnd": { "pc": "Giá thỏa thuận", "console": "Giá thỏa thuận" },
+      "usd": { "pc": "DM to deal", "console": "DM to deal" }
+    },
+    {
+      "rank": "Elite III: 13 points",
+      "rewards": [
+        "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+        "x1 82+ 10x Rare Gold Players Pack",
+        "x1 84+ 6x Rare Gold Players Pack",
+        "x1 86+ 3x Rare Gold Players Pack",
+        "x2 81+ TOTW Player Pack",
+        "x1 Cornerstones Guarantee Pack (Untradeable)",
+        "50,000 Coins"
+      ],
+      "vnd": { "pc": "Giá thỏa thuận", "console": "Giá thỏa thuận" },
+      "usd": { "pc": "DM to deal", "console": "DM to deal" }
+    },
+    {
+      "rank": "Elite IV: 12 points",
+      "rewards": [
+        "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+        "x1 82+ 10x Rare Gold Players Pack",
+        "x1 86+ 3x Rare Gold Players Pack",
+        "x2 81+ TOTW Player Pack",
+        "x1 Cornerstones Guarantee Pack (Untradeable)",
+        "40,000 Coins"
+      ],
+      "vnd": { "pc": "800,000", "console": "1,100,000" },
+      "usd": { "pc": "35$", "console": "50$" }
+    },
+    {
+      "rank": "Elite V: 11 points",
+      "rewards": [
+        "x1 83+ 10x Rare Gold Players Pack (Untradeable)",
+        "x1 82+ 10x Rare Gold Players Pack",
+        "x1 85+ 3x Rare Gold Players Pack",
+        "x2 81+ TOTW Player Pack",
+        "x1 Max 87 Cornerstones Guarantee Pack (Untradeable)",
+        "30,000 Coins"
+      ],
+      "vnd": { "pc": "600,000", "console": "900,000" },
+      "usd": { "pc": "30$", "console": "40$" }
+    }
+  ]
+}
